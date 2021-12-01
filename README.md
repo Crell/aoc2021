@@ -1,34 +1,19 @@
-# Some Library
+# Advent of Code 2021 Entries
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE.md)
-[![Total Downloads][ico-downloads]][link-downloads]
+My entries for the Advent of Code challenge, 2021 edition.  ALl entries were implemented in mostly-functional PHP, just to prove it can be done.
 
+Released publicly for educational value.
 
-## Contributing
+Want to know more about functional programming in PHP?  I have a [whole book on the topic](https://leanpub.com/thinking-functionally-in-php):
 
-Please see [CONTRIBUTING](CONTRIBUTING.md) and [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md) for details.
-
-## Security
-
-If you discover any security related issues, please email larry at garfieldtech dot com instead of using the issue tracker.
+<center>
+<a href="https://leanpub.com/thinking-functionally-in-php"><img width="256px" src="https://files.peakd.com/file/peakd-hive/crell/OoS8gnwV-Cover-small.png" alt="Thinking Functionally in PHP"></a>
+</center>
 
 ## Credits
 
 - [Larry Garfield][link-author]
-- [All Contributors][link-contributors]
 
 ## License
 
 The Lesser GPL version 3 or later. Please see [License File](LICENSE.md) for more information.
-
-[ico-version]: https://img.shields.io/packagist/v/Crell/Tukio.svg?style=flat-square
-[ico-license]: https://img.shields.io/badge/License-LGPLv3-green.svg?style=flat-square
-[ico-downloads]: https://img.shields.io/packagist/dt/Crell/Tukio.svg?style=flat-square
-
-[link-packagist]: https://packagist.org/packages/Crell/Tukio
-[link-scrutinizer]: https://scrutinizer-ci.com/g/Crell/Tukio/code-structure
-[link-code-quality]: https://scrutinizer-ci.com/g/Crell/Tukio
-[link-downloads]: https://packagist.org/packages/Crell/Tukio
-[link-author]: https://github.com/Crell
-[link-contributors]: ../../contributors
