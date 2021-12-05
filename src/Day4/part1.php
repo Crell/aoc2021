@@ -57,11 +57,6 @@ class Game
         $this->winner = null;
         $this->lastPlay = -1;
     }
-
-    public function done(): bool
-    {
-        return $this->winner !== null;
-    }
 }
 
 class Board
@@ -110,9 +105,6 @@ class Board
 
     public function score(int $lastPlay): int
     {
-//        $nums = flatten($this->numbers);
-//        $marks = flatten($this->marked);
-
         $sum = pipe($this->marked,
             flatten(...),
             amap(static fn (bool $is): bool => !$is),
@@ -171,7 +163,7 @@ function explodeBoardLine(string $line): array
     );
 }
 
-function gameStep($game, $next): Game
+function gameStep(Game $game, int $next): Game
 {
     $markBoard = static fn (Board $board) => $board->play($next);
     $newBoards = array_map($markBoard, $game->boards);

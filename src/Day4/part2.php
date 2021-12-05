@@ -58,11 +58,6 @@ class Game
         $this->winners = [];
         $this->lastPlay = -1;
     }
-
-    public function done(): bool
-    {
-        return $this->winners !== null;
-    }
 }
 
 class Board implements Stringable
@@ -91,9 +86,14 @@ class Board implements Stringable
     protected function stringify(): string
     {
         return pipe($this->numbers,
-            amap(implode('')),
+            flatten(...),
             implode(''),
         );
+    }
+
+    public function __toString(): string
+    {
+        return $this->identifier;
     }
 
     public function play(int $num): static
@@ -133,11 +133,6 @@ class Board implements Stringable
         );
 
         return $sum * $lastPlay;
-    }
-
-    public function __toString(): string
-    {
-        return $this->identifier;
     }
 }
 
@@ -186,7 +181,7 @@ function explodeBoardLine(string $line): array
     );
 }
 
-function gameStep($game, $next): Game
+function gameStep(Game $game, int $next): Game
 {
     $markBoard = static fn (Board $board) => $board->play($next);
     $newBoards = array_map($markBoard, $game->boards);
@@ -215,19 +210,12 @@ function reduceUntil(mixed $init, callable $c, callable $stop): callable
     };
 }
 
-function gameOver(Game $game): bool
-{
-    return count($game->boards) === 0;
-}
-
 $game = parseInstructions($inputFile);
 
 $done = pipe($game->plays,
-    reduceUntil($game, gameStep(...), gameOver(...)),
+    reduceUntil($game, gameStep(...), fn(Game $game):bool => count($game->boards) === 0),
 );
 
 $loser = $done->winners[array_key_last($done->winners)];
 
 print $loser->score($done->lastPlay) . PHP_EOL;
-
-//var_dump($done);
