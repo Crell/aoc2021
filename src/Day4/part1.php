@@ -58,8 +58,6 @@ class Game
         $this->lastPlay = -1;
     }
 
-
-
     public function done(): bool
     {
         return $this->winner !== null;
@@ -159,30 +157,17 @@ function extractBoardData(array $input): array
 {
     return pipe($input,
         afilter(),
+        amap(explodeBoardLine(...)),
         fn(array $in): array => array_chunk($in, 5),
-        amap(explodeBoardData(...)),
     );
 }
 
-function explodeBoardLine(array $line): array
+function explodeBoardLine(string $line): array
 {
     return pipe($line,
         trim(...),
         static fn ($line) => preg_split("/\s+/", $line),
         amap(intval(...)),
-    );
-}
-
-function explodeBoardData(array $boardLines): array
-{
-    $explodeLine = fn($line) => pipe($line,
-        trim(...),
-        static fn ($line) => preg_split("/\s+/", $line),
-        amap(intval(...)),
-    );
-
-    return pipe($boardLines,
-        amap($explodeLine),
     );
 }
 
