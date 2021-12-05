@@ -1,6 +1,6 @@
 # Advent of Code 2021 Entries
 
-My entries for the Advent of Code challenge, 2021 edition.  ALl entries were implemented in mostly-functional PHP, just to prove it can be done.
+My entries for the Advent of Code challenge, 2021 edition.  All entries were implemented in mostly-functional PHP, just to prove it can be done.
 
 Released publicly for educational value.
 
