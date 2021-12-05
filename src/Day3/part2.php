@@ -34,7 +34,11 @@ class BitCount
 
 function masks(int $size): array
 {
-    return array_reverse(amap(static fn (int $i) => 2 ** $i)(range(0, $size - 1)));
+    static $cache;
+    return $cache[$size] ??= pipe(range(0, $size - 1),
+        amap(static fn (int $i) => 2 ** $i),
+        array_reverse(...),
+    );
 }
 
 function countBits(BitCount $bitCount, int $next, array $masks): BitCount
@@ -59,13 +63,6 @@ function computeEpsilon(BitCount $bitCount, array $masks): int
     return array_sum(array_map($c, $bitCount->counts, $masks));
 }
 
-$masks = masks(12);
-
-$diags = pipe($inputFile,
-    lines(...),
-    amap(bindec(...)),
-);
-
 function bitCounter(array $diags, $masks): BitCount
 {
     $bitCounter = static fn(BitCount $counter, int $next): BitCount => countBits($counter, $next, $masks);
@@ -75,13 +72,6 @@ function bitCounter(array $diags, $masks): BitCount
         reduce(new BitCount(counts: $initalCounts), $bitCounter),
     );
 }
-
-$counts = bitCounter($diags, $masks);
-
-$gamma = computeGamma($counts, $masks);
-$epsilon = computeEpsilon($counts, $masks);
-
-print "Gamma: $gamma, Epsilon: $epsilon\nProduct: " . $epsilon * $gamma . PHP_EOL;
 
 function oxCriteria(BitCount $bitCount, int $position): int
 {
@@ -115,6 +105,20 @@ function findGas(array $masks, callable $criteria, array $diags, int $position =
     $filtered = afilter($filter)($diags);
     return findGas($masks, $criteria, $filtered, $position + 1);
 }
+
+$masks = masks(12);
+
+$diags = pipe($inputFile,
+    lines(...),
+    amap(bindec(...)),
+);
+
+$counts = bitCounter($diags, $masks);
+
+$gamma = computeGamma($counts, $masks);
+$epsilon = computeEpsilon($counts, $masks);
+
+print "Gamma: $gamma, Epsilon: $epsilon\nProduct: " . $epsilon * $gamma . PHP_EOL;
 
 $o2level = findGas($masks, oxCriteria(...), $diags);
 $co2level = findGas($masks, coCriteria(...), $diags);

@@ -33,7 +33,11 @@ class BitCount
 
 function masks(int $size): array
 {
-    return array_reverse(amap(static fn (int $i) => 2 ** $i)(range(0, $size - 1)));
+    static $cache;
+    return $cache[$size] ??= pipe(range(0, $size - 1),
+        amap(static fn (int $i) => 2 ** $i),
+        array_reverse(...),
+    );
 }
 
 function countBits(BitCount $bitCount, int $next): BitCount
