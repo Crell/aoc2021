@@ -2,15 +2,12 @@
 
 declare(strict_types=1);
 
-use function Crell\fp\afilter;
-use function Crell\fp\itfilter;
 use function Crell\fp\amap;
-use function Crell\fp\itmap;
 use function Crell\fp\explode;
-use function Crell\fp\collect;
-use function Crell\fp\reduce;
+use function Crell\fp\itfilter;
+use function Crell\fp\itmap;
 use function Crell\fp\pipe;
-use function Crell\fp\compose;
+use function Crell\fp\reduce;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -28,17 +25,12 @@ function lines(string $file): iterable
 }
 
 
-class Point implements Stringable
+class Point
 {
     public function __construct(
         public readonly int $x,
         public readonly int $y,
     ) {}
-
-    public function __toString(): string
-    {
-        return $this->x . ':' . $this->y;
-    }
 }
 
 class Line
