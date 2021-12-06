@@ -2,8 +2,11 @@
 
 declare(strict_types=1);
 
+use function Crell\fp\afilter;
 use function Crell\fp\amap;
+use function Crell\fp\compose;
 use function Crell\fp\explode;
+use function Crell\fp\flatten;
 use function Crell\fp\itmap;
 use function Crell\fp\pipe;
 use function Crell\fp\reduce;
@@ -69,7 +72,7 @@ function makeLine(string $line): Line
     );
 }
 
-function makePoint($coords): Point
+function makePoint(array $coords): Point
 {
     return new Point((int)$coords[0], (int)$coords[1]);
 }
@@ -125,15 +128,11 @@ function markLine(Grid $old, iterable $points): Grid
 
 function countOverlaps(Grid $grid): int
 {
-    $count = 0;
-    foreach ($grid->grid as $i => $row) {
-        foreach ($row as $cell) {
-            if ($cell > 1) {
-                $count++;
-            }
-        }
-    }
-    return $count;
+    return pipe($grid->grid,
+        flatten(...),
+        afilter(static fn (int $cell): bool => $cell > 1),
+        count(...),
+    );
 }
 
 
@@ -147,3 +146,24 @@ $overlaps = pipe($in,
 );
 
 print "Overlaps: $overlaps\n";
+
+
+// Or, in one giant pipe:
+
+$overlaps2 = pipe($inputFile,
+    lines(...),
+    itmap(compose(explode('->'),
+        amap(trim(...)),
+        amap(explode(',')),
+        amap(makePoint(...)),
+        static fn (array $points): Line => new Line($points[0], $points[1]),
+    )),
+    itmap(materializeLine(...)),
+    reduce(new Grid, markLine(...)),
+    static fn (Grid $g): array => $g->grid,
+    flatten(...),
+    afilter(static fn (int $cell): bool => $cell > 1),
+    count(...),
+);
+
+print "Overlaps 2: $overlaps2\n";

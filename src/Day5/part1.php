@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
+use function Crell\fp\afilter;
 use function Crell\fp\amap;
 use function Crell\fp\explode;
+use function Crell\fp\flatten;
 use function Crell\fp\itfilter;
 use function Crell\fp\itmap;
 use function Crell\fp\pipe;
@@ -70,7 +72,7 @@ function makeLine(string $line): Line
     );
 }
 
-function makePoint($coords): Point
+function makePoint(array $coords): Point
 {
     return new Point((int)$coords[0], (int)$coords[1]);
 }
@@ -106,15 +108,11 @@ function markLine(Grid $old, iterable $points): Grid
 
 function countOverlaps(Grid $grid): int
 {
-    $count = 0;
-    foreach ($grid->grid as $i => $row) {
-        foreach ($row as $cell) {
-            if ($cell > 1) {
-                $count++;
-            }
-        }
-    }
-    return $count;
+    return pipe($grid->grid,
+        flatten(...),
+        afilter(static fn (int $cell): bool => $cell > 1),
+        count(...),
+    );
 }
 
 
