@@ -75,8 +75,21 @@ $fishCounter = pipe($inputFile,
     fishSummarizer(...),
 );
 
-$total = pipe(range(1, 256),
-    reduce($fishCounter, static fn (array $counts, int $gen): array => fishMapper($counts)),
+function nth(int $count, mixed $init, callable $mapper): mixed
+{
+    return reduce($init, static fn (mixed $val, int $gen): mixed => $mapper($val))(range(1, $count));
+}
+
+function iterate(mixed $init, callable $mapper): iterable
+{
+    yield $init;
+    while (true) {
+        yield $init = $mapper($init);
+    }
+}
+
+$total = pipe(
+    nth(256, $fishCounter, fishMapper(...)),
     array_sum(...),
 );
 
