@@ -36,7 +36,7 @@ $data = pipe($inputFile,
     amap(intval(...)),
 );
 
-$distanceFinder = static fn (int $median): int => pipe($data,
+$costFinder = static fn (int $median): int => pipe($data,
     amap(static fn (int $i): int => cost($i, $median)),
     array_sum(...),
 );
@@ -44,7 +44,7 @@ $distanceFinder = static fn (int $median): int => pipe($data,
 $totalDistance = pipe($data,
     numSort(...),
     medians(...),
-    amap($distanceFinder(...)),
+    amap($costFinder(...)),
     min(...),
 );
 
