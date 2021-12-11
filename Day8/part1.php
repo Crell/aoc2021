@@ -9,7 +9,7 @@ use function Crell\fp\flatten;
 use function Crell\fp\explode;
 use function Crell\fp\pipe;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $inputFile = __DIR__ . '/input.txt';
 

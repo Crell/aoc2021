@@ -8,7 +8,7 @@ use function Crell\fp\collect;
 use function Crell\fp\compose;
 use function Crell\fp\pipe;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $inputFile = __DIR__ . '/input.txt';
 

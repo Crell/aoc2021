@@ -5,11 +5,11 @@ declare(strict_types=1);
 use function Crell\fp\afilter;
 use function Crell\fp\amap;
 use function Crell\fp\explode;
-use function Crell\fp\implode;
+use function Crell\fp\first;
 use function Crell\fp\flatten;
 use function Crell\fp\pipe;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $inputFile = __DIR__ . '/input.txt';
 
@@ -47,20 +47,19 @@ class Game
 
     public readonly bool $done;
 
-    /** @var Board[] */
-    public readonly array $winners;
+    public readonly ?Board $winner;
 
     public function __construct(
         public readonly array $plays,
         /** Board[] */
         public readonly array $boards,
     ) {
-        $this->winners = [];
+        $this->winner = null;
         $this->lastPlay = -1;
     }
 }
 
-class Board implements Stringable
+class Board
 {
     use Evolvable;
 
@@ -71,29 +70,12 @@ class Board implements Stringable
 
     public readonly bool $won;
 
-    public readonly string $identifier;
-
     public function __construct(
         public readonly array $numbers,
     ) {
         $line = array_fill(0, 5, false);
         $this->marked = array_fill(0, 5, $line);
         $this->won = false;
-
-        $this->identifier = $this->stringify();
-    }
-
-    protected function stringify(): string
-    {
-        return pipe($this->numbers,
-            flatten(...),
-            implode(''),
-        );
-    }
-
-    public function __toString(): string
-    {
-        return $this->identifier;
     }
 
     public function play(int $num): static
@@ -186,14 +168,12 @@ function gameStep(Game $game, int $next): Game
     $markBoard = static fn (Board $board) => $board->play($next);
     $newBoards = array_map($markBoard, $game->boards);
 
-    $newWinners = array_filter($newBoards, static fn (Board $b) => $b->won);
-
-    $remainingBoards = array_diff($newBoards, $newWinners);
+    $winner = first(static fn (Board $b) => $b->won)($newBoards);
 
     return $game->with(
         lastPlay: $next,
-        boards: $remainingBoards,
-        winners: [...$game->winners, ...$newWinners],
+        boards: $newBoards,
+        winner: $winner,
     );
 }
 
@@ -213,9 +193,9 @@ function reduceUntil(mixed $init, callable $c, callable $stop): callable
 $game = parseInstructions($inputFile);
 
 $done = pipe($game->plays,
-    reduceUntil($game, gameStep(...), fn(Game $game):bool => count($game->boards) === 0),
+    reduceUntil($game, gameStep(...), static fn (Game $game): bool => (bool)$game->winner),
 );
 
-$loser = $done->winners[array_key_last($done->winners)];
+print $done->winner->score($done->lastPlay) . PHP_EOL;
 
-print $loser->score($done->lastPlay) . PHP_EOL;
+//var_dump($done);

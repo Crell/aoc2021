@@ -11,7 +11,7 @@ use function Crell\fp\itmap;
 use function Crell\fp\pipe;
 use function Crell\fp\reduce;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $inputFile = __DIR__ . '/input.txt';
 
