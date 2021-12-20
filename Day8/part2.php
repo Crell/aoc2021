@@ -118,11 +118,9 @@ function deriveMapping(Line $line): Line
 {
     // These all have only one possible translation, so do the easy bits.
     $mappings[1] = key($line->inputMasks[2]);
-    $mappings[7] = key($line->inputMasks[3]);
     $mappings[4] = key($line->inputMasks[4]);
+    $mappings[7] = key($line->inputMasks[3]);
     $mappings[8] = key($line->inputMasks[7]);
-
-    // these are still not quite right. In the second dataset, 3 and 9 are both coming back the same(!)
 
     $mappings[6] = findByMask($line->inputMasks[6], $mappings[1], 6);
     $mappings[2] = findByMask($line->inputMasks[5], $mappings[4], 5);
