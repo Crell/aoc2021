@@ -2,13 +2,10 @@
 
 declare(strict_types=1);
 
-use function Crell\fp\amap;
 use function Crell\fp\afilter;
-use function Crell\fp\reduce;
+use function Crell\fp\amap;
 use function Crell\fp\compose;
-use function Crell\fp\explode;
 use function Crell\fp\pipe;
-use function Crell\fp\amapWithKeys;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -42,7 +39,7 @@ function buildNeighborMap(array $heights): iterable
                 $heights[$r][$c-1] ?? null,
                 $heights[$r+1][$c] ?? null,
                 $heights[$r][$c+1] ?? null,
-            ], fn($v): bool => !is_null($v));
+            ], static fn ($v): bool => !is_null($v));
             yield new Position($val, $neighbors);
         }
     }
@@ -55,7 +52,7 @@ function isLowPoint(Position $p): bool
 
 function computeRisk(Position $p): int
 {
-    return $p->value +1;
+    return $p->value + 1;
 }
 
 $riskSum = pipe($inputFile,

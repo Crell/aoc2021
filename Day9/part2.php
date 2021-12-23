@@ -23,44 +23,6 @@ function lines(string $file): iterable
     fclose($fp);
 }
 
-class Position
-{
-    public function __construct(
-        public readonly int $value,
-        public readonly int $x,
-        public readonly int $y,
-        public readonly array $neighborValues,
-    ) {}
-}
-
-class Point
-{
-    public function __construct(
-        public readonly int $x,
-        public readonly int $y,
-    ) {}
-
-    public function left(): static
-    {
-        return new static($this->x - 1, $this->y);
-    }
-
-    public function right(): static
-    {
-        return new static($this->x + 1, $this->y);
-    }
-
-    public function above(): static
-    {
-        return new static($this->x, $this->y - 1);
-    }
-
-    public function below(): static
-    {
-        return new static($this->x, $this->y + 1);
-    }
-}
-
 function findLowPoints(array $heights): iterable
 {
     foreach ($heights as $r => $row) {
@@ -70,7 +32,7 @@ function findLowPoints(array $heights): iterable
                 $heights[$r][$c-1] ?? null,
                 $heights[$r+1][$c] ?? null,
                 $heights[$r][$c+1] ?? null,
-            ], fn($v): bool => !is_null($v));
+            ], static fn ($v): bool => !is_null($v));
             if ($val < min($neighbors)) {
                 yield ['x' => $r, 'y' => $c];
             }
@@ -139,7 +101,6 @@ $grid = pipe($inputFile,
 
 $basinProduct = pipe($grid,
     findLowPoints(...),
-    collect(),
     amap(fn(array $point) => basin($point, $grid)),
     sortBySize(...),
     atake(3),
