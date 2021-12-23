@@ -45,20 +45,20 @@ function basin(array $point, array $grid): array
     return computeBasin([], $point, $grid);
 }
 
-function computeBasin(array $points, array $point, array $grid): array
+function computeBasin(array $basin, array $point, array $grid): array
 {
     if (in_array($grid[$point['x']][$point['y']] ?? null, [9, null], true)) {
-        return $points;
+        return $basin;
     }
-    if (in_array($point, $points, true)) {
-        return $points;
+    if (in_array($point, $basin, true)) {
+        return $basin;
     }
-    return pipe($points,
+    return pipe($basin,
         append($point),
-        fn(array $points): array => computeBasin($points, ['x' => $point['x'] - 1, 'y' => $point['y']], $grid),
-        fn(array $points): array => computeBasin($points, ['x' => $point['x'] + 1, 'y' => $point['y']], $grid),
-        fn(array $points): array => computeBasin($points, ['x' => $point['x'], 'y' => $point['y'] - 1], $grid),
-        fn(array $points): array => computeBasin($points, ['x' => $point['x'], 'y' => $point['y'] + 1], $grid),
+        fn(array $basin): array => computeBasin($basin, ['x' => $point['x'] - 1, 'y' => $point['y']], $grid),
+        fn(array $basin): array => computeBasin($basin, ['x' => $point['x'] + 1, 'y' => $point['y']], $grid),
+        fn(array $basin): array => computeBasin($basin, ['x' => $point['x'], 'y' => $point['y'] - 1], $grid),
+        fn(array $basin): array => computeBasin($basin, ['x' => $point['x'], 'y' => $point['y'] + 1], $grid),
     );
 }
 
