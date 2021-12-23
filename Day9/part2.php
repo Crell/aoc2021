@@ -64,8 +64,8 @@ function computeBasin(array $basin, array $point, array $grid): array
 
 function sortBySize(array $basins): array
 {
-    usort($basins, static fn ($a, $b): int => (count($a) <=> count($b)));
-    return array_reverse($basins);
+    usort($basins, static fn ($a, $b): int => -1 * (count($a) <=> count($b)));
+    return $basins;
 }
 
 function atake(int $count): callable
