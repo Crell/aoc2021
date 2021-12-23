@@ -71,6 +71,9 @@ function sortBySize(array $basins): array
 function atake(int $count): callable
 {
     return static function (iterable $a) use ($count): array {
+        if (is_array($a)) {
+            return array_slice($a, 0, $count);
+        }
         $ret = [];
         foreach ($a as $k => $v) {
             if (--$count < 0) {
