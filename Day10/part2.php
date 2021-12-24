@@ -80,14 +80,6 @@ function imSort(array $a): array
     return $a;
 }
 
-function medians(array $sorted): array
-{
-    $idx = (count($sorted) + 1) / 2;
-    return is_float($idx)
-        ? [$sorted[floor($idx)], $sorted[ceil($idx)]]
-        : [$sorted[$idx]];
-}
-
 $score = pipe($inputFile,
     lines(...),
     itmap(parse(...)),
